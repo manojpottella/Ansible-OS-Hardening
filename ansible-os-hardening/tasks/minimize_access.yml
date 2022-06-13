@@ -1,5 +1,24 @@
+#### Preventing /etc/passwd and /etc/shadow accidental deletion ###
 - name: Prevent accidental deletion/editing - /etc/passwd and /etc/shadow
   command: chattr +i {{ item }}
   with_items:
     - /etc/passwd
     - /etc/shadow
+#### Preventing /etc/passwd and /etc/shadow accidental deletion ###
+#
+#### Set time for terminating an idle session ####
+- name: Check tmout.sh file
+  stat:
+      path: /etc/profile.d/tmout.sh
+  register: tmout_info
+
+- name: Set time for terminating an idle session
+  copy:
+    src: tmout.sh
+    dest: /etc/profile.d/tmout.sh
+    owner: root
+    group: root
+    mode: '0644'
+  when: not tmout_info.stat.exists
+#### Set time for terminating an idle session ####
+#
