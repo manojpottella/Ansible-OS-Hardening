@@ -2,6 +2,7 @@
 - name: RHEL -> Ensure GPG check is globally activated
   ini_file:
     dest: /etc/yum.conf
+    #dest: /etc/dnf/dnf.conf
     section: main
     option: gpgcheck
     value: "1"
