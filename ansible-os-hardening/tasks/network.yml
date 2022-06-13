@@ -1,6 +1,6 @@
 - name: RHEL -> Disable IPv6 with sysctl
   sysctl: 
-    name: {{ item }}
+    name: '{{ item }}'
     value: 1 
     state: present 
     reload: yes
