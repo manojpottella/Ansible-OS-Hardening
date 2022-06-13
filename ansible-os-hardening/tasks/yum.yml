@@ -1,0 +1,73 @@
+# Ensure gpgcheck Enabled In Main yum Configuration 
+- name: RHEL -> Ensure GPG check is globally activated
+  ini_file:
+    dest: /etc/yum.conf
+    section: main
+    option: gpgcheck
+    value: "1"
+    no_extra_spaces: true
+    create: false
+
+# Ensure gpgcheck Enabled for Local Packages 
+- name: RHEL -> Ensure GPG check Enabled for Local Packages (Yum)
+  ini_file:
+    dest: /etc/yum.conf
+    section: main
+    option: localpkg_gpgcheck
+    value: "1"
+    no_extra_spaces: true
+    create: true
+
+# Ensure gpgcheck Enabled for All yum Package Repositories
+- name: RHEL -> Grep for yum repo section names
+  shell: |
+    set -o pipefail
+    grep -HEr '^\[.+\]' -r /etc/yum.repos.d/
+  register: repo_grep_results
+  ignore_errors: true
+  changed_when: false
+
+- name: RHEL -> Set gpgcheck=1 for each yum repo
+  ini_file:
+    path: '{{ item[0] }}'
+    section: '{{ item[1] }}'
+    option: gpgcheck
+    value: '1'
+    no_extra_spaces: true
+  loop: '{{ repo_grep_results.stdout | regex_findall( "(.+\.repo):\[(.+)\]\n?" ) }}'
+
+- name: RHEL -> Install some common packages
+  yum:
+    name:
+      - authconfig
+      - firewalld
+    state: present
+
+- name: RHEL -> Install some common packages (EL7)
+  yum:
+    name:
+      - yum-plugin-security
+      - tcp_wrappers
+      - libselinux-python
+      - policycoreutils-python
+    state: present
+  when:
+    - ansible_os_family == 'RedHat'
+    - ansible_distribution_major_version|int == 7
+
+- name: RHEL -> Install some common packages (EL8/9)
+  yum:
+    name:
+      - python3-policycoreutils
+    state: present
+  when: >
+    ansible_os_family == 'RedHat' and
+      (
+        ansible_distribution_major_version|int == 8 or
+        ansible_distribution_major_version|int == 9
+      )
+- name: RHEL -> Ensure telnet is removed
+  #package:
+  yum:
+    name: telnet
+    state: absent

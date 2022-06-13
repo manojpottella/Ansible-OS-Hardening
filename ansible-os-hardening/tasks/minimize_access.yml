@@ -1,0 +1,5 @@
+- name: Prevent accidental deletion/editing - /etc/passwd and /etc/shadow
+  command: chattr +i {{ item }}
+  with_items:
+    - /etc/passwd
+    - /etc/shadow
