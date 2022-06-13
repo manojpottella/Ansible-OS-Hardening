@@ -7,11 +7,6 @@
 #### Preventing /etc/passwd and /etc/shadow accidental deletion ###
 #
 #### Set time for terminating an idle session ####
-- name: Check tmout.sh file
-  stat:
-      path: /etc/profile.d/tmout.sh
-  register: tmout_info
-
 - name: Set time for terminating an idle session
   copy:
     src: tmout.sh
@@ -19,6 +14,5 @@
     owner: root
     group: root
     mode: '0644'
-  when: not tmout_info.stat.exists
 #### Set time for terminating an idle session ####
 #
