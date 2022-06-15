@@ -1,2 +1,8 @@
 ---
 # defaults file for ansible-os-hardening
+ssh_config_file: /etc/ssh/sshd_config
+ssh_banner_file: /etc/issue.net
+sshd_alive_interval_timeout: '300'
+ssh_alive_countmax: '0'
+ssh_pass_attempts: '3'
+

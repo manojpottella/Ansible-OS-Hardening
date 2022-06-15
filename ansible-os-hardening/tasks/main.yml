@@ -1,2 +1,22 @@
 ---
 # tasks file for ansible-os-hardening
+- name: Import ssh task
+  import_tasks: ssh.yml
+
+- name: Running handler for above ssh tasks
+  shell: "echo Running handler for all there.."
+  notify:
+    - restart sshd
+#
+- name: Import yum task
+  import_tasks: yum.yml
+#
+- name: Import network task
+  import_tasks: network.yml
+#
+- name: Import service task
+  import_tasks: service.yml
+#
+- name: Import minimize_access task
+  import_tasks: minimize_access.yml
+#

@@ -2,6 +2,6 @@
 - name: RHEL Linux OS Hardening with Ansible
   hosts: all
   gather_facts: yes
-  ignore_errors: no
+  ignore_errors: yes
   roles:
     - ansible-os-hardening

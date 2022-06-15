@@ -1,0 +1,83 @@
+#- name: RHEL -> Set SSH idle timeout interval 
+#  lineinfile: 
+#    dest: /etc/ssh/sshd_config 
+#    regexp: "^#ClientAliveInterval" 
+#    line: "ClientAliveInterval 600" 
+#    state: present
+#    #backup: yes
+#  notify:
+#    - restart sshd
+
+#- name: RHEL -> Set SSH AliveCountMax
+#  lineinfile: 
+#    dest: /etc/ssh/sshd_config 
+#    regexp: "^#ClientAliveCountMax" 
+#    line: "ClientAliveCountMax 0" 
+#    state: present
+#    #backup: yes
+#  notify:
+#    - restart sshd
+
+#### Set SSH idle timeout interval ####
+- name: RHEL -> Set SSH idle timeout interval
+  block:
+    - name: RHEL -> SSH AliveInterval - Check for duplicate values from {{ ssh_config_file }}
+      lineinfile:
+        path: "{{ ssh_config_file }}"
+        create: false
+        regexp: (?i)^\s*ClientAliveInterval\s+
+        state: absent
+      check_mode: true
+      changed_when: false
+      register: ssh_alive_interval_dupes
+
+    - name: RHEL -> SSH AliveInterval - Deduplicate values from {{ ssh_config_file }}
+      lineinfile:
+        path: "{{ ssh_config_file }}"
+        create: false
+        regexp: (?i)^\s*ClientAliveInterval\s+
+        state: absent
+      when: ssh_alive_interval_dupes.found is defined and ssh_alive_interval_dupes.found > 1
+
+    - name: RHEL -> SSH AliveInterval - Insert correct line to {{ ssh_config_file }}
+      lineinfile:
+        path: "{{ ssh_config_file }}"
+        create: true
+        regexp: (?i)^\s*ClientAliveInterval\s+
+        line: ClientAliveInterval {{ sshd_alive_interval_timeout }}
+        state: present
+        insertbefore: ^[#\s]*Match
+        validate: /usr/sbin/sshd -t -f %s
+#
+#### Set SSH AliveCountMax ####
+- name: RHEL -> Set SSH AliveCountMax
+  block:
+    - name: RHEL -> SSH AliveCountMax - Check for duplicate values from {{ ssh_config_file }}
+      lineinfile:
+        path: "{{ ssh_config_file }}"
+        create: false
+        regexp: (?i)^\s*ClientAliveCountMax\s+
+        state: absent
+      check_mode: true
+      changed_when: false
+      register: ssh_alive_countmax_dupes
+
+    - name: RHEL -> SSH AliveCountMax - Deduplicate values from {{ ssh_config_file }}
+      lineinfile:
+        path: "{{ ssh_config_file }}"
+        create: false
+        regexp: (?i)^\s*ClientAliveCountMax\s+
+        state: absent
+      when: ssh_alive_countmax_dupes.found is defined and ssh_alive_countmax_dupes.found > 1
+
+    - name: RHEL -> SSH AliveCountMax - Insert correct line to {{ ssh_config_file }}
+      lineinfile:
+        path: "{{ ssh_config_file }}"
+        create: true
+        regexp: (?i)^\s*ClientAliveCountMax\s+
+        line: ClientAliveCountMax {{ ssh_alive_countmax }}
+        state: present
+        insertbefore: ^[#\s]*Match
+        validate: /usr/sbin/sshd -t -f %s
+#
+
