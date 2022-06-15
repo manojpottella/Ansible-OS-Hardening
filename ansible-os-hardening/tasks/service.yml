@@ -1,6 +1,8 @@
+#### Start Crond service ###
 - name: RHEL -> Ensure crond is enabled
   service:
     name: crond
     enabled: yes
     state: started
+#
   
