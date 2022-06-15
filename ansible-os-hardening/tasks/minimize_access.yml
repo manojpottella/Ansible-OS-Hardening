@@ -1,5 +1,5 @@
 #### Preventing /etc/passwd and /etc/shadow accidental deletion ###
-- name: Prevent accidental deletion/editing - /etc/passwd and /etc/shadow
+- name: RHEL -> Prevent accidental deletion/editing - /etc/passwd and /etc/shadow
   command: chattr +i {{ item }}
   with_items:
     - /etc/passwd
@@ -7,7 +7,7 @@
 #### Preventing /etc/passwd and /etc/shadow accidental deletion ###
 #
 #### Set time for terminating an idle session ####
-- name: Set time for terminating an idle session
+- name: RHEL -> Set time for terminating an idle session
   copy:
     src: tmout.sh
     dest: /etc/profile.d/tmout.sh
