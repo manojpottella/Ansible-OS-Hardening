@@ -67,8 +67,23 @@
         ansible_distribution_major_version|int == 8 or
         ansible_distribution_major_version|int == 9
       )
-- name: RHEL -> Ensure telnet is removed
-  #package:
+#      
+- name: RHEL -> Ensure telnet server and client is removed
+  package:
   yum:
-    name: telnet
+    name:
+      - telnet-server 
+      - telnet
+    state: absent
+#    
+- name: RHEL -> Ensure chrony is installed
+  package:
+    name: chrony
+    state: present
+#
+- name: RHEL -> Ensure rsh-server and client is removed
+  package:
+    name:
+      - rsh-server
+      - rsh
     state: absent

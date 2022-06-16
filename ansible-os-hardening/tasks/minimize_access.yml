@@ -5,6 +5,32 @@
     - /etc/passwd
     - /etc/shadow
 #
+- name: Ensure owner root on shadow and passwd files
+  file:
+    path: '{{ item }}'
+    owner: root
+    group: root
+  loop:
+    - /etc/passwd
+    - /etc/shadow
+    - /etc/group
+    - /etc/gshadow
+#
+- name: Ensure permission 0000 on /etc/shadow and /etc/gshadow
+  file:
+    path: '{{ item }}'
+    mode: '0000'
+  loop:
+    - /etc/shadow
+    - /etc/gshadow
+#
+- name: Ensure permission 0644 on /etc/passwd and /etc/group
+  file:
+    path: '{{ item }}'
+    mode: '0644'
+  loop:
+    - /etc/passwd 
+    - /etc/group
 #### Set time for terminating an idle session ####
 - name: RHEL -> Set time for terminating an idle session
   copy:
