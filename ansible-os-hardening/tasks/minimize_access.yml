@@ -10,7 +10,7 @@
     path: '{{ item }}'
     owner: root
     group: root
-  loop:
+  with_items:
     - /etc/passwd
     - /etc/shadow
     - /etc/group
@@ -20,7 +20,7 @@
   file:
     path: '{{ item }}'
     mode: '0000'
-  loop:
+  with_items:
     - /etc/shadow
     - /etc/gshadow
 #
@@ -28,7 +28,7 @@
   file:
     path: '{{ item }}'
     mode: '0644'
-  loop:
+  with_items:
     - /etc/passwd 
     - /etc/group
 #### Set time for terminating an idle session ####
