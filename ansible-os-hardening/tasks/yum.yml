@@ -70,7 +70,7 @@
 #      
 - name: RHEL -> Ensure telnet server and client is removed
   package:
-  yum:
+  #yum:
     name:
       - telnet-server 
       - telnet
